@@ -31,3 +31,10 @@
 ## Restriction:
 - Deadline le **24/08/23**
 - Jeu totalement textuel (hors bouton de déplacement)
+
+## Couleur texte:
+- Jeu: violet
+- ennemi: orange
+- joueur: bleu
+- degats: rouge
+- PV: vert
