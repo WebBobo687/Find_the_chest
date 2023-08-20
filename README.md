@@ -1,4 +1,4 @@
-# Find_hte_chest
+# Find_the_chest
 *projet d'application php*
 
 ## Context:
