@@ -90,17 +90,5 @@ abstract class Perso {
             echo "<p><span class='jeu'>Jeu: </span>Il reste <span class='life'>"+ $joueur->getPv() + "</span> au joueur";
             }
         }
-
-        if ( $joueur->getPv() > 0)
-        {
-            $joueur->pv = $joueur->getPvStart();
-            echo "<p><span class='jeu'>Jeu: </span> Le joueur à restauré tout ses pv</p>";
-            echo "<p><span class='joueur'>Joueur: </span> possède <span class='life'>"+ $joueur->getPv() +"</span> pv</p>";
-        }
-
-        else
-        {
-            echo "<h1>Fin du jeu</h1>";
-        }
     }
 }

@@ -4,9 +4,12 @@ declare(strict_types=1);
 namespace Classes;
 use Classes\Perso;
 
+$win = False;
+
 class Joueur extends Perso {
 
     public int $exp;
+    public bool $win;
 
     // __setter__
     public function setPv($pv)
@@ -63,6 +66,7 @@ class Joueur extends Perso {
     public function gagner($posCoffre, $posJoueur)
     {
         if ($posCoffre == $posJoueur) {
+            $win = True;
             die("Vous avez trouver le coffre, félicitation!");
         }
     }
