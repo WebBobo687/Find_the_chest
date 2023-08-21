@@ -1,4 +1,6 @@
 <?php
+
+namespace Classes;
 abstract class Perso {
     /*
     * @var int $pv (point de vie)
@@ -7,6 +9,8 @@ abstract class Perso {
 
     public $pv;
     public $atq;
+    public $posX;
+    public $posY;
 
     // __setter__
     protected function setPv($pv)
@@ -19,6 +23,14 @@ abstract class Perso {
         $this->$atq = $atq;
     }
 
+    protected function setPosX($posX){
+        $this->$posX = $posX;
+    }
+    
+    protected function setPosY($posY){
+        $this->$posY = $posY;
+    }
+
     // __getter__
     public function getPv($pv)
     {
@@ -28,6 +40,14 @@ abstract class Perso {
     public function getAtq($atq)
     {
         return $this->$atq;
+    }
+
+    public function getPosX($posX){
+        return $this->$posX;
+    }
+    
+    public function getPosY($posY){
+        return $this->$posY;
     }
 
     /*
