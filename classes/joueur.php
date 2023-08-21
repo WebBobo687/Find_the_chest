@@ -5,6 +5,8 @@ use Classes\Perso;
 
 class Joueur extends Perso {
 
+    public $exp;
+
     // __setter__
     protected function setPv($pv)
     {
@@ -26,6 +28,11 @@ class Joueur extends Perso {
         parent::setPosY($posY);
     }
 
+    protected function setExp($exp)
+    {
+        $this->$exp = $exp;
+    }
+
     // __getter__
     public function getPv($pv)
     {
@@ -45,6 +52,11 @@ class Joueur extends Perso {
     public function getPosY($posY)
     {
         return $this->$posY;
+    }
+
+    public function getExp($exp)
+    {
+        return $this->$exp;
     }
 
 }
