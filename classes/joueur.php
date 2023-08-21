@@ -31,7 +31,7 @@ class Joueur extends Perso {
 
     protected function setExp($exp)
     {
-        $this->$exp = $exp;
+        $this->$exp = 0;
     }
 
     // __getter__
