@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Classes;
 abstract class Perso {
@@ -7,10 +8,10 @@ abstract class Perso {
     * @var int $atq (attaque / force)
     */
 
-    public $pv;
-    public $atq;
-    public $posX;
-    public $posY;
+    public int $pv;
+    public int $atq;
+    public int $posX;
+    public int $posY;
 
     // __setter__
     protected function setPv($pv)

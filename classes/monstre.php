@@ -2,26 +2,49 @@
 declare(strict_types=1);
 
 namespace Classes;
+use Classes\Perso;
 
-class Monstre
+class Monstre extends Perso
 {
-    private int $pv;
-    private int $atq;
+    // __setter__
+    protected function setPv($pv)
+    {
+        parent::setPv($pv);
+    }
 
-    public function getPv()
+    protected function setAtq($atq)
     {
-        return $this->pv;
+        parent::setAtq($atq);
     }
-    public function setPv($pv)
+
+    protected function setPosX($posX)
     {
-        $this->pv = $pv;
+        parent::setPosX($posX);
     }
-    public function getAtq()
+    
+    protected function setPosY($posY)
     {
-        return $this->atq;
+        parent::setPosY($posY);
     }
-    public function setAtq($atq)
+
+    // __getter__
+    public function getPv($pv)
     {
-        $this->atq = $atq;
+        return $this->$pv;
+    }
+
+    public function getAtq($atq)
+    {
+        return $this->$atq;
+    }
+
+    public function getPosX($posX)
+    {
+        return $this->$posX;
+    }
+
+    public function getPosY($posY)
+    {
+        return $this->$posY;
     }
 }

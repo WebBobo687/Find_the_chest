@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
 namespace Classes;
 use Classes\Perso;
 
 class Joueur extends Perso {
 
-    public $exp;
+    public int $exp;
 
     // __setter__
     protected function setPv($pv)
