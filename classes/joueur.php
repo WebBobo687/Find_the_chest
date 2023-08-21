@@ -60,4 +60,10 @@ class Joueur extends Perso {
         return $this->$exp;
     }
 
+    public function gagner($posCoffre, $posJoueur)
+    {
+        if ($posCoffre == $posJoueur) {
+            die("Vous avez trouver le coffre, félicitation!");
+        }
+    }
 }
