@@ -9,12 +9,12 @@ class Coffre
     public int $posY;
 
     // __setter__
-    private function setPosX($posX)
+    public function setPosX($posX)
     {
         $this->$posX = $posX;
     }
     
-    private function setPosY($posY)
+    public function setPosY($posY)
     {
         $this->$posY = $posY;
     }

@@ -6,8 +6,8 @@ namespace Classes;
 
 class Carte
 {
-    private int $largeur = random_int(10, 50);
-    private int $longueur = random_int(10, 50);
+    private int $largeur = 10;
+    private int $longueur = 10;
     private array $cases = [];
 
     public function __construct()
@@ -15,7 +15,7 @@ class Carte
         for ($i = 0; $i < $this->longueur; $i++) {
             $ligne = [];
             for ($j = 0; $j < $this->largeur; $j++) {
-                $ligne[] = ' ';
+                $ligne[] = $j;
             }
             $this->cases[] = $ligne;
         }
