@@ -38,3 +38,7 @@
 - joueur: bleu
 - degats: rouge
 - PV: vert
+
+## Technologie:
+- PHP (POO)
+- Bootstrap
