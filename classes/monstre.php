@@ -5,23 +5,23 @@ namespace Classes;
 
 class Monstre
 {
-    private int $life;
-    private int $strength;
+    private int $pv;
+    private int $atq;
 
-    public function getLife()
+    public function getPv()
     {
-        return $this->life;
+        return $this->pv;
     }
-    public function setLife($life)
+    public function setPv($pv)
     {
-        $this->life = $life;
+        $this->pv = $pv;
     }
-    public function getStrength()
+    public function getAtq()
     {
-        return $this->strength;
+        return $this->atq;
     }
-    public function setStrength($strength)
+    public function setAtq($atq)
     {
-        $this->strength = $strength;
+        $this->atq = $atq;
     }
 }
