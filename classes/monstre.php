@@ -7,22 +7,22 @@ use Classes\Perso;
 class Monstre extends Perso
 {
     // __setter__
-    protected function setPv($pv)
+    public function setPv($pv)
     {
         parent::setPv($pv);
     }
 
-    protected function setAtq($atq)
+    public function setAtq($atq)
     {
         parent::setAtq($atq);
     }
 
-    protected function setPosX($posX)
+    public function setPosX($posX)
     {
         parent::setPosX($posX);
     }
     
-    protected function setPosY($posY)
+    public function setPosY($posY)
     {
         parent::setPosY($posY);
     }
