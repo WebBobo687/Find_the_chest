@@ -38,7 +38,11 @@ function game()
         $i++;
     }
 
-    $coffre = (new Coffre(rand(0, 9), rand(0, 9)));
+    $coffre = (new Coffre(0, 0));
+    while ($coffre->posX == $joueur->posX && $coffre->posY == $joueur->posY) {
+        unset($coffre);
+        $coffre = (new Coffre(rand(0, 9), rand(0, 9)));
+    }
 
     $carte = new Carte();
     
@@ -55,6 +59,9 @@ function game()
             break;
         }
         $j++;
+        if ($joueur->posX == $coffre->posX && $joueur->posY == $coffre->posY) {
+            gagner();
+        }
     }
 }
 
@@ -106,4 +113,12 @@ function combat($joueur, $monstre)
         unset($monster);
         return "survive";
     }
+}
+
+/*
+* Si le joueur est sur l'emplacement du coffre,
+*   La pertie s'arrête et le joueur gagne.
+*/
+function gagner() {
+    die("<h1>VOUS AVEZ GAGNER !!</h1>");
 }
