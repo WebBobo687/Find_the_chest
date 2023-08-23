@@ -15,7 +15,8 @@
                             <a class="nav-link text-danger text-decoration-underline" href="index.php">Bienvenue</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-danger text-decoration-underline" href="#">Lancer une partie</a>
+                            <a class="nav-link text-danger text-decoration-underline" href="play.php">Lancer une
+                                partie</a>
                         </li>
                     </ul>
                 </div>
@@ -70,7 +71,7 @@
 
             <h4 class="px-4 text-decoration-underline text-start text-danger"><i
                     class="bi bi-arrow-right-short"></i>Amusez-vous bien !</h4>
-            <a href="#" class="btn btn-danger mb-3">Je lance une partie</a>
+            <a href="play.php" class="btn btn-danger mb-3">Je lance une partie</a>
 
         </div>
     </main>
