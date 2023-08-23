@@ -9,8 +9,8 @@ class Coffre
     public int $posY;
 
     public function __construct($posX, $posY) {
-        $this->$posX = $posX;
-        $this->$posY = $posY;
+        $this->posX = $posX;
+        $this->posY = $posY;
     }
 
     // __setter__
@@ -25,13 +25,13 @@ class Coffre
     }
 
     // __getter__
-    public function getPosX($posX)
+    public function getPosX()
     {
-        return $this->$posX;
+        return $this->posX;
     }
     
-    public function getPosY($posY)
+    public function getPosY()
     {
-        return $this->$posY;
+        return $this->posY;
     }
 }
