@@ -17,30 +17,34 @@ game();
 
 function game()
 {
+    $i=1;
     $win = false;
+    $newMonstre = "monstre".$i;
     $nombreMonstre = rand(3, 8);
 
     # Création du joueur
     $joueur = (new Joueur(rand(125, 250), rand(100, 125), 0, 0));
-    echo "<pre>";
-    print_r($joueur);
-    echo "</pre>";
+    $joueurStatut = 'en vie';
     
     # Création du monstre
-    $monstre = (new Monstre(rand(125, 250), rand(100, 125), 0, 0));
-    echo "<pre>";
-    print_r($monstre);
-    echo "</pre>";
+    $$newMonstre = (new Monstre(rand(125, 250), rand(100, 125), 0, 0));
 
     $coffre = new Coffre;
     $coffre->setPosX(rand(0, 9));
     $coffre->setPosY(rand(0, 9));
 
     $carte = new Carte();
-
-    if ($joueur->posX == $monstre->posX && $joueur->posY == $monstre->posY){
-        //Combat
-        combat($joueur, $monstre);
+    while ($joueurStatut !== 'mort' && $i < 4) {
+        if ($joueur->posX == $$newMonstre->posX && $joueur->posY == $$newMonstre->posY){
+            //Combat
+            $joueurStatut = combat($joueur, $$newMonstre);
+        }
+        $i ++;
+        if ($joueurStatut == 'survive') {
+            unset($monster);
+            $$newMonstre = (new Monstre(rand(125, 250), rand(100, 125), 0, 0));
+        }
+        
     }
 }
 
@@ -66,7 +70,7 @@ function game()
 
 function combat($joueur, $monstre)
 {
-    echo "<p class='jeu'>Le combat commence</p><br>";
+    echo "<p class='jeu'>Le combat commence</p>";
     $pv = $joueur->pv;
     while ($joueur->pv > 0 && $monstre->pv >0) {
         $joueur->attaque($monstre);
@@ -75,17 +79,20 @@ function combat($joueur, $monstre)
             echo "<p class='monstre'>Il reste <span class='pv'>$monstre->pv pv</span> au monstre</p>";
             $monstre->attaque($joueur);
             echo "<p class='monstre'>Le monstre inflige <pans class='degat'>$monstre->atq dégats</span> au joueur";
+            echo "<p class='joueur'>Il reste <span class='pv'>$joueur->pv pv au joueur";
         }
     }
     if ($joueur->pv <= 0) {
         echo "<p>Le joueur est mort";
         echo "<h1>VOUS AVEZ PERDU</h1>";
+        return "mort";
     } elseif ($monstre->pv <= 0) {
         echo "<p>Le monstre est mort";
         echo "<p>Le joueur fini le combat avec $joueur->pv pv";
         $joueur->pv = $pv;
         echo "<p>Le joueur regagne ses pv, il lui reste $joueur->pv pv";
         $joueur->exp += $monstre->atq;
-        echo "<p>Le joueur gagne $monstre->atq EXP<br> $joueur->exp EXP total</p>";
+        echo "<p>Le joueur gagne $monstre->atq EXP<br> $joueur->exp EXP total</p><br>";
+        return "survive";
     }
 }
