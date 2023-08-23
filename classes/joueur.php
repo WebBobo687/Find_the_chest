@@ -25,4 +25,13 @@ class Joueur extends Perso {
         return $this->exp;
     }
 
+    public function attaque($cible) {
+        parent::attaque($cible);
+    }
+
+    public function degats($dommage)
+    {
+        parent::degats($dommage)   ;
+    }
+
 }

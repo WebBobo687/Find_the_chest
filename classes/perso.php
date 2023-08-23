@@ -68,5 +68,5 @@ abstract class Perso {
     {
         $this->pv -= $dommage;
     }
-    
+
 }

@@ -9,4 +9,13 @@ class Monstre extends Perso
     public function __construct($pv, $atq, $posX, $posY) {
         parent::__construct($pv, $atq, $posX, $posY);
     }
+
+    public function attaque($cible) {
+        parent::attaque($cible);
+    }
+
+    public function degats($dommage)
+    {
+        parent::degats($dommage)   ;
+    }
 }
