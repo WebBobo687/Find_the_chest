@@ -15,38 +15,68 @@ use Classes\Carte;
 
 game();
 
+function createJoueur():object
+{
+    return new Joueur(rand(125, 250), rand(100, 125), 0, 0);
+}
+
+function createCoffre():object
+{
+    do {
+        $coffre = new Coffre(rand(0, 9), rand(0, 9));
+    } while($coffre->posX == 0 && $coffre->posY == 0);
+    return $coffre;
+}
+
+function createMonstres():array
+{
+    $monstres=[];
+    $nombreMonstres = rand(3, 8);
+
+    for ($i=0; $i<=$nombreMonstres; $i++)
+    {
+        $monstres[] = createUniqueMonstre();
+    }
+    return $monstres;
+}
+
+function createUniqueMonstre():object
+{
+    do {
+        $monstre = new Monstre(rand(125, 250), rand(100, 125), rand(0, 9), rand(0, 9));
+    } while ($monstre->posX == 0 && $monstre->posY == 0);
+    return $monstre;
+}
+
+function coffreTrouve($joueur, $coffre):void
+{
+    if($joueur->posX == $coffre->posX && $joueur->posY == $coffre->posY) {
+        gagner();
+    }
+}
+
+/*
+* Si le joueur est sur l'emplacement du coffre,
+*   La pertie s'arrête et le joueur gagne.
+*/
+function gagner() {
+    die("<h1>VOUS AVEZ GAGNER !!</h1>");
+}
+
 function game()
 {
-    $i=0;
-    $win = false;
-    $monstres = [];
-    $nombreMonstre = rand(3, 8);
+    $carte = new Carte();
+    $j = 0;
 
     # Création du joueur
-    $joueur = (new Joueur(rand(125, 250), rand(100, 125), 0, 0));
+    $joueur = createJoueur();
     $joueurStatut = 'en vie';
     
     # Création du monstre
-    while ($i <= $nombreMonstre) {
-        $newMonstre = (new Monstre(rand(125, 250), rand(100, 125),rand(0, 9), rand(0, 9)));
-        if ($newMonstre->posX == $joueur->posX && $newMonstre->posY == $joueur->posY) {
-            unset($newMonstre);
-            $newMonstre = (new Monstre(rand(125, 250), rand(100, 125),rand(0, 9), rand(0, 9)));
-        } else {
-            $monstres[$i]= $newMonstre;
-        }
-        $i++;
-    }
-
-    $coffre = (new Coffre(0, 0));
-    while ($coffre->posX == $joueur->posX && $coffre->posY == $joueur->posY) {
-        unset($coffre);
-        $coffre = (new Coffre(rand(0, 9), rand(0, 9)));
-    }
-
-    $carte = new Carte();
+    $monstres = createMonstres();
     
-    $j = 0;
+    $coffre = createCoffre();
+
     while ($joueurStatut !== 'mort' && $j < 3) {
         foreach ($monstres as $monstre){
             if ($joueur->posX == $monstre->posX && $joueur->posY == $monstre->posY){
@@ -59,9 +89,7 @@ function game()
             break;
         }
         $j++;
-        if ($joueur->posX == $coffre->posX && $joueur->posY == $coffre->posY) {
-            gagner();
-        }
+        coffreTrouve($joueur, $coffre);
     }
 }
 
@@ -115,10 +143,4 @@ function combat($joueur, $monstre)
     }
 }
 
-/*
-* Si le joueur est sur l'emplacement du coffre,
-*   La pertie s'arrête et le joueur gagne.
-*/
-function gagner() {
-    die("<h1>VOUS AVEZ GAGNER !!</h1>");
-}
+
