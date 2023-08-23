@@ -8,7 +8,7 @@ class Joueur extends Perso {
 
     public int $exp;
 
-    public function __construct($pv, $atq, $posX, $posY, $exp) {
+    public function __construct($pv, $atq, $posX, $posY, $exp=0) {
         parent::__construct($pv, $atq, $posX, $posY);
         $this->exp = $exp;
     }
