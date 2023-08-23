@@ -8,6 +8,11 @@ class Coffre
     public int $posX;
     public int $posY;
 
+    public function __construct($posX, $posY) {
+        $this->$posX = $posX;
+        $this->$posY = $posY;
+    }
+
     // __setter__
     public function setPosX($posX)
     {
