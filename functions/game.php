@@ -17,9 +17,9 @@ game();
 
 function game()
 {
-    $i=1;
+    $i=0;
     $win = false;
-    $newMonstre = "monstre".$i;
+    $monstres = [];
     $nombreMonstre = rand(3, 8);
 
     # Création du joueur
@@ -27,24 +27,36 @@ function game()
     $joueurStatut = 'en vie';
     
     # Création du monstre
-    $$newMonstre = (new Monstre(rand(125, 250), rand(100, 125), 0, 0));
+    while ($i <= $nombreMonstre) {
+        $newMonstre = (new Monstre(rand(125, 250), rand(100, 125), 0, 0));
+        if ($newMonstre->posX == $joueur->posX && $newMonstre->posY == $joueur->posY) {
+            unset($newMonstre);
+            $newMonstre = (new Monstre(rand(125, 250), rand(100, 125), 0, 0));
+        } else {
+            $monstres[$i]= $newMonstre;
+        }
+        $i++;
+    }
 
     $coffre = new Coffre;
     $coffre->setPosX(rand(0, 9));
     $coffre->setPosY(rand(0, 9));
 
     $carte = new Carte();
-    while ($joueurStatut !== 'mort' && $i < 4) {
-        if ($joueur->posX == $$newMonstre->posX && $joueur->posY == $$newMonstre->posY){
-            //Combat
-            $joueurStatut = combat($joueur, $$newMonstre);
+    
+    $j = 0;
+    while ($joueurStatut !== 'mort' && $j < 3) {
+        foreach ($monstres as $monstre){
+            if ($joueur->posX == $monstre->posX && $joueur->posY == $monstre->posY){
+                //Combat
+                $joueurStatut = combat($joueur, $monstre);
+            }
+            if ($joueurStatut == 'survive') {
+                unset($monstres[array_search($monstre, $monstres)]);
+            }
+            break;
         }
-        $i ++;
-        if ($joueurStatut == 'survive') {
-            unset($monster);
-            $$newMonstre = (new Monstre(rand(125, 250), rand(100, 125), 0, 0));
-        }
-        
+        $j++;
     }
 }
 
@@ -93,6 +105,7 @@ function combat($joueur, $monstre)
         echo "<p>Le joueur regagne ses pv, il lui reste $joueur->pv pv";
         $joueur->exp += $monstre->atq;
         echo "<p>Le joueur gagne $monstre->atq EXP<br> $joueur->exp EXP total</p><br>";
+        unset($monster);
         return "survive";
     }
 }
