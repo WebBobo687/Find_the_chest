@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace Classes;
+
 abstract class Perso {
     /*
     * @var int $pv (point de vie)
@@ -12,6 +13,13 @@ abstract class Perso {
     public int $atq;
     public int $posX;
     public int $posY;
+
+    public function __construct($pv, $atq, $posX, $posY) {
+        $this->pv = $pv;
+        $this->atq = $atq;
+        $this->posX = $posX;
+        $this->posY = $posY;
+    }
 
     // __setter__
     protected function setPv($pv)
@@ -51,6 +59,14 @@ abstract class Perso {
         return $this->posY;
     }
 
+    public function attaque(Perso $cible)
+    {
+        $cible->degats($this->atq);
+    }
     
+    public function degats($dommage)
+    {
+        $this->pv -= $dommage;
+    }
     
 }
