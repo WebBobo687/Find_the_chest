@@ -28,23 +28,23 @@ class Monstre extends Perso
     }
 
     // __getter__
-    public function getPv($pv)
+    public function getPv()
     {
-        return $this->$pv;
+        return $this->pv;
     }
 
-    public function getAtq($atq)
+    public function getAtq()
     {
-        return $this->$atq;
+        return $this->atq;
     }
 
-    public function getPosX($posX)
+    public function getPosX()
     {
-        return $this->$posX;
+        return $this->posX;
     }
 
-    public function getPosY($posY)
+    public function getPosY()
     {
-        return $this->$posY;
+        return $this->posY;
     }
 }

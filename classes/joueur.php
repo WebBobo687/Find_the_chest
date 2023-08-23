@@ -38,36 +38,29 @@ class Joueur extends Perso {
     }
 
     // __getter__
-    public function getPv($pv)
+    public function getPv()
     {
-        return $this->$pv;
+        return $this->pv;
     }
 
-    public function getAtq($atq)
+    public function getAtq()
     {
-        return $this->$atq;
+        return $this->atq;
     }
 
-    public function getPosX($posX)
+    public function getPosX()
     {
-        return $this->$posX;
+        return $this->posX;
     }
     
-    public function getPosY($posY)
+    public function getPosY()
     {
-        return $this->$posY;
+        return $this->posY;
     }
 
-    public function getExp($exp)
+    public function getExp()
     {
-        return $this->$exp;
+        return $this->exp;
     }
 
-    public function gagner($posCoffre, $posJoueur)
-    {
-        if ($posCoffre == $posJoueur) {
-            $win = True;
-            die("Vous avez trouver le coffre, félicitation!");
-        }
-    }
 }
