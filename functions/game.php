@@ -28,19 +28,17 @@ function game()
     
     # Création du monstre
     while ($i <= $nombreMonstre) {
-        $newMonstre = (new Monstre(rand(125, 250), rand(100, 125), 0, 0));
+        $newMonstre = (new Monstre(rand(125, 250), rand(100, 125),rand(0, 9), rand(0, 9)));
         if ($newMonstre->posX == $joueur->posX && $newMonstre->posY == $joueur->posY) {
             unset($newMonstre);
-            $newMonstre = (new Monstre(rand(125, 250), rand(100, 125), 0, 0));
+            $newMonstre = (new Monstre(rand(125, 250), rand(100, 125),rand(0, 9), rand(0, 9)));
         } else {
             $monstres[$i]= $newMonstre;
         }
         $i++;
     }
 
-    $coffre = new Coffre;
-    $coffre->setPosX(rand(0, 9));
-    $coffre->setPosY(rand(0, 9));
+    $coffre = (new Coffre(rand(0, 9), rand(0, 9)));
 
     $carte = new Carte();
     
