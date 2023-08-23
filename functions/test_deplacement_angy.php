@@ -56,9 +56,22 @@
         } elseif (array_key_exists('right', $_POST) && $joueur->posX < 9) {
             $joueur->posX += 1;
         }
-
+    
+        if ($joueur->posX === 0) {
+            echo "<br>Le joueur est au bout à gauche de la carte.";
+        } elseif ($joueur->posX === 9) {
+            echo "<br>Le joueur est au bout à droite de la carte.";
+        }
+    
+        if ($joueur->posY === 0) {
+            echo "<br>Le joueur est au bout en bas de la carte.";
+        } elseif ($joueur->posY === 9) {
+            echo "<br>Le joueur est au bout en haut de la carte.";
+        }
+    
         echo "<br>Position du joueur après déplacement - X: " . $joueur->posX . ", Y: " . $joueur->posY;
     }
+    
 
     $carte = new Carte();
 
