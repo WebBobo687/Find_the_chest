@@ -13,32 +13,82 @@ use Classes\Monstre;
 use Classes\Coffre;
 use Classes\Carte;
 
-game();
+main();
+
+function main()
+{
+    if (session_status() != 2){
+        session_start();
+    }
+
+    # Création du joueur
+    if (!isset($_SESSION['joueur'])){
+        $_SESSION['joueur'] = createJoueur();
+    }
+    $joueur = $_SESSION['joueur'];
+    $joueurStatut = 'en vie';
+    
+    # Création du monstre
+    if (!isset($_SESSION['monstres'])){
+        $_SESSION['monstres'] = createMonstres();
+    }
+    $monstres = $_SESSION['monstres'];
+    
+
+    if (!isset($_SESSION['coffre'])){
+        $_SESSION['coffre'] = createCoffre();
+    }
+    $coffre = $_SESSION['coffre'];
+    
+    
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        mouvement($joueur, $coffre);
+    }
+
+    foreach ($monstres as $monstre){
+        if ($joueur->posX == $monstre->posX && $joueur->posY == $monstre->posY){
+            //Combat
+            $joueurStatut = combat($joueur, $monstre);
+            if ($joueurStatut == 'survive') {
+                unset($monstres[array_search($monstre, $monstres)]);
+                $_SESSION['monstres'] = $monstres;
+            }
+        }
+    }
+}
+
 
 function createJoueur():object
 {
-    return new Joueur(rand(125, 250), rand(100, 125), 0, 0);
+    $_SESSION['joueur'] = new Joueur(rand(125, 250), rand(100, 125), 0, 0);;
+    return $_SESSION['joueur'];
 }
+
+
 
 function createCoffre():object
 {
     do {
-        $coffre = new Coffre(rand(0, 9), rand(0, 9));
-    } while($coffre->posX == 0 && $coffre->posY == 0);
-    return $coffre;
+        $_SESSION['coffre'] = new Coffre(rand(0, 9), rand(0, 9));
+    } while($_SESSION['coffre']->posX == 0 && $_SESSION['coffre']->posY == 0);
+    return $_SESSION['coffre'];
 }
+
+
 
 function createMonstres():array
 {
-    $monstres=[];
-    $nombreMonstres = rand(3, 8);
+    $_SESSION['monstres'] =[];
+    $_SESSION['nombreMonstres'] = rand(3, 8);
 
-    for ($i=0; $i<=$nombreMonstres; $i++)
+    for ($i=0; $i<=$_SESSION['nombreMonstres']; $i++)
     {
-        $monstres[] = createUniqueMonstre();
+        $_SESSION['monstres'][] = createUniqueMonstre();
     }
-    return $monstres;
+    return $_SESSION['monstres'];
 }
+
+
 
 function createUniqueMonstre():object
 {
@@ -48,6 +98,8 @@ function createUniqueMonstre():object
     return $monstre;
 }
 
+
+
 function coffreTrouve($joueur, $coffre):void
 {
     if($joueur->posX == $coffre->posX && $joueur->posY == $coffre->posY) {
@@ -55,43 +107,48 @@ function coffreTrouve($joueur, $coffre):void
     }
 }
 
+
+
 /*
 * Si le joueur est sur l'emplacement du coffre,
 *   La pertie s'arrête et le joueur gagne.
 */
 function gagner() {
+    session_destroy();
     die("<h1>VOUS AVEZ GAGNER !!</h1>");
 }
 
-function game()
+
+
+function mouvement($joueur, $coffre)
 {
-    $carte = new Carte();
-    $j = 0;
-
-    # Création du joueur
-    $joueur = createJoueur();
-    $joueurStatut = 'en vie';
-    
-    # Création du monstre
-    $monstres = createMonstres();
-    
-    $coffre = createCoffre();
-
-    while ($joueurStatut !== 'mort' && $j < 3) {
-        foreach ($monstres as $monstre){
-            if ($joueur->posX == $monstre->posX && $joueur->posY == $monstre->posY){
-                //Combat
-                $joueurStatut = combat($joueur, $monstre);
-            }
-            if ($joueurStatut == 'survive') {
-                unset($monstres[array_search($monstre, $monstres)]);
-            }
-            break;
-        }
-        $j++;
-        coffreTrouve($joueur, $coffre);
+    if (array_key_exists('top', $_POST) && $joueur->posY < 9) {
+        $joueur->posY += 1;
+    } elseif (array_key_exists('bottom', $_POST) && $joueur->posY > 0) {
+        $joueur->posY -= 1;
+    } elseif (array_key_exists('left', $_POST) && $joueur->posX > 0) {
+        $joueur->posX -= 1;
+    } elseif (array_key_exists('right', $_POST) && $joueur->posX < 9) {
+        $joueur->posX += 1;
     }
+
+    if ($joueur->posX === 0) {
+        echo "<br>Le joueur est au bout à gauche de la carte.";
+    } elseif ($joueur->posX === 9) {
+        echo "<br>Le joueur est au bout à droite de la carte.";
+    }
+
+    if ($joueur->posY === 0) {
+        echo "<br>Le joueur est au bout en bas de la carte.";
+    } elseif ($joueur->posY === 9) {
+        echo "<br>Le joueur est au bout en haut de la carte.";
+    }
+    coffreTrouve($joueur, $coffre);
+
+    echo "<br>Position du joueur après déplacement - X: " . $joueur->posX . ", Y: " . $joueur->posY;
 }
+
+
 
 /*
 * Fonction de combat
@@ -112,14 +169,15 @@ function game()
 * Si pvJoueur <= 0
 *   Fin de la partie
 */
-
 function combat($joueur, $monstre)
 {
     echo "<p class='jeu'>Le combat commence</p>";
     $pv = $joueur->pv;
+
     while ($joueur->pv > 0 && $monstre->pv >0) {
         $joueur->attaque($monstre);
         echo "<p class='joueur'>Le joueur inflige <span class='degat'>$joueur->atq dégats</span> au monstre</p>";
+
         if ($monstre->pv > 0) {
             echo "<p class='monstre'>Il reste <span class='pv'>$monstre->pv pv</span> au monstre</p>";
             $monstre->attaque($joueur);
@@ -127,11 +185,14 @@ function combat($joueur, $monstre)
             echo "<p class='joueur'>Il reste <span class='pv'>$joueur->pv pv au joueur";
         }
     }
+
     if ($joueur->pv <= 0) {
         echo "<p>Le joueur est mort";
         echo "<h1>VOUS AVEZ PERDU</h1>";
+        session_destroy();
         return "mort";
-    } elseif ($monstre->pv <= 0) {
+    }
+    elseif ($monstre->pv <= 0) {
         echo "<p>Le monstre est mort";
         echo "<p>Le joueur fini le combat avec $joueur->pv pv";
         $joueur->pv = $pv;
