@@ -1,64 +1,25 @@
-<!DOCTYPE html>
-<html>
+<?php
 
-<head>
-    <title>Move Player</title>
-    <!-- Ajoutez le lien vers Bootstrap CSS ici -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .btn-arrow-center {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-            font-size: 24px; /* Ajustez la taille de police selon vos préférences */
-            border-radius: 5px; /* Pour rendre les boutons ronds */
-        }
-    </style>
-</head>
-<body>
-    <div class="container mt-5">
-        <form method="post" action="">
-            <div class="row">
-                <div class="col-md-12 text-center mb-3">
-                    <!-- HAUT -->
-                    <button class="btn btn-primary btn-arrow-center" type="submit" name="top">&#x2B06;</button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 text-center">
-                    <!-- GAUCHE -->
-                    <button class="btn btn-primary btn-arrow-center" type="submit" name="left">&#x2B05;</button>
-                </div>
-                <div class="col-md-6 text-center">
-                    <!-- DROITE -->
-                    <button class="btn btn-primary btn-arrow-center" type="submit" name="right">&#x27A1;</button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 text-center mt-3">
-                    <!-- BAS -->
-                    <button class="btn btn-primary btn-arrow-center" type="submit" name="bottom">&#x2B07;</button>
-                </div>
-            </div>
-        </form>
-    </div>
+spl_autoload_register(function ($className) {
+    $classPath = str_replace('\\', '/', $className) . '.php';
+    $classPath = '../' . $classPath;
 
-    <?php
+    require_once(__DIR__ . '/' . $classPath);
+});
 
-    spl_autoload_register(function ($className) {
-        $classPath = str_replace('\\', '/', $className) . '.php';
-        $classPath = '../' . $classPath;
+use \Classes\Joueur;
+use \Classes\Carte;
 
-        require_once(__DIR__ . '/' . $classPath);
-    });
+$launched = false;
+session_start(); // Start the session
 
-    use \Classes\Joueur;
-    use \Classes\Carte;
+if (isset($_POST['top']) || isset($_POST['left']) || isset($_POST['right']) || isset($_POST['bottom'])) {
+    $launched = true;
+}
 
-    session_start(); // Start the session
-    
+if ($launched != false) {
+
+
     if (!isset($_SESSION['joueur'])) {
         $positionX = rand(0, 9);
         $positionY = rand(0, 9);
@@ -67,7 +28,7 @@
 
     $joueur = $_SESSION['joueur'];
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_POST['endgame'])) {
         if (array_key_exists('top', $_POST) && $joueur->posY < 9) {
             $joueur->posY += 1;
         } elseif (array_key_exists('bottom', $_POST) && $joueur->posY > 0) {
@@ -79,26 +40,28 @@
         }
 
         if ($joueur->posX === 0) {
-            echo "<br>Le joueur est au bout à gauche de la carte.";
+            $_SESSION['jeu'][] = "<p class='fw-bold text-danger'>Le joueur est à gauche de la carte.</p>";
         } elseif ($joueur->posX === 9) {
-            echo "<br>Le joueur est au bout à droite de la carte.";
+            $_SESSION['jeu'][] = "<p class='fw-bold text-danger'>Le joueur est à droite de la carte.</p>";
         }
 
         if ($joueur->posY === 0) {
-            echo "<br>Le joueur est au bout en bas de la carte.";
+            $_SESSION['jeu'][] = "<p class='fw-bold text-danger'>Le joueur est en bas de la carte.</p>";
         } elseif ($joueur->posY === 9) {
-            echo "<br>Le joueur est au bout en haut de la carte.";
+            $_SESSION['jeu'][] = "<p class='fw-bold text-danger'>Le joueur est en haut de la carte.</p>";
         }
 
-        echo "<br>Position du joueur après déplacement - X: " . $joueur->posX . ", Y: " . $joueur->posY;
+        $_SESSION['jeu'][] = '<p class="jeu"><span style="color: black; font-weight: bold; text-decoration: underline;">' . date('h:i:s') . '</span> | Coordonées du joueur : X => ' . $joueur->posX . ' Y => ' . $joueur->posY . '</p>';
+
     }
 
+}
 
-    $carte = new Carte();
+if (isset($_POST['endgame'])) {
+    session_destroy();
+    $_SESSION['jeu'] = [];
+}
 
-    ?>
-    <!-- Ajoutez le lien vers Bootstrap JS (facultatif, pour certaines fonctionnalités) ici -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+$carte = new Carte();
 
-</html>
+?>
