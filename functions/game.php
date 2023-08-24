@@ -3,7 +3,7 @@
 spl_autoload_register(function ($className) {
     $classPath = str_replace('\\', '/', $className) . '.php';
     $classPath = '../' . $classPath;
-    
+
     require_once(__DIR__ . '/' . $classPath);
 });
 
@@ -13,40 +13,45 @@ use Classes\Monstre;
 use Classes\Coffre;
 use Classes\Carte;
 
-main();
+if (session_status() != 2) {
+    session_start();
+}
+
+if (!isset($_POST['endgame'])) {
+    main();
+} else {
+    session_destroy();
+    $_SESSION['jeu'] = [];
+}
 
 function main()
 {
-    if (session_status() != 2){
-        session_start();
-    }
-
     # Création du joueur
-    if (!isset($_SESSION['joueur'])){
+    if (!isset($_SESSION['joueur'])) {
         $_SESSION['joueur'] = createJoueur();
     }
     $joueur = $_SESSION['joueur'];
     $joueurStatut = 'en vie';
-    
+
     # Création du monstre
-    if (!isset($_SESSION['monstres'])){
+    if (!isset($_SESSION['monstres'])) {
         $_SESSION['monstres'] = createMonstres();
     }
     $monstres = $_SESSION['monstres'];
-    
 
-    if (!isset($_SESSION['coffre'])){
+
+    if (!isset($_SESSION['coffre'])) {
         $_SESSION['coffre'] = createCoffre();
     }
     $coffre = $_SESSION['coffre'];
-    
-    
+
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mouvement($joueur, $coffre);
     }
 
-    foreach ($monstres as $monstre){
-        if ($joueur->posX == $monstre->posX && $joueur->posY == $monstre->posY){
+    foreach ($monstres as $monstre) {
+        if ($joueur->posX == $monstre->posX && $joueur->posY == $monstre->posY) {
             //Combat
             $joueurStatut = combat($joueur, $monstre);
             if ($joueurStatut == 'survive') {
@@ -58,31 +63,31 @@ function main()
 }
 
 
-function createJoueur():object
+function createJoueur(): object
 {
-    $_SESSION['joueur'] = new Joueur(rand(125, 250), rand(100, 125), 0, 0);;
+    $_SESSION['joueur'] = new Joueur(rand(125, 250), rand(100, 125), 0, 0);
+    ;
     return $_SESSION['joueur'];
 }
 
 
 
-function createCoffre():object
+function createCoffre(): object
 {
     do {
         $_SESSION['coffre'] = new Coffre(rand(0, 9), rand(0, 9));
-    } while($_SESSION['coffre']->posX == 0 && $_SESSION['coffre']->posY == 0);
+    } while ($_SESSION['coffre']->posX == 0 && $_SESSION['coffre']->posY == 0);
     return $_SESSION['coffre'];
 }
 
 
 
-function createMonstres():array
+function createMonstres(): array
 {
-    $_SESSION['monstres'] =[];
+    $_SESSION['monstres'] = [];
     $_SESSION['nombreMonstres'] = rand(3, 8);
 
-    for ($i=0; $i<=$_SESSION['nombreMonstres']; $i++)
-    {
+    for ($i = 0; $i <= $_SESSION['nombreMonstres']; $i++) {
         $_SESSION['monstres'][] = createUniqueMonstre();
     }
     return $_SESSION['monstres'];
@@ -90,7 +95,7 @@ function createMonstres():array
 
 
 
-function createUniqueMonstre():object
+function createUniqueMonstre(): object
 {
     do {
         $monstre = new Monstre(rand(125, 250), rand(100, 125), rand(0, 9), rand(0, 9));
@@ -100,9 +105,9 @@ function createUniqueMonstre():object
 
 
 
-function coffreTrouve($joueur, $coffre):void
+function coffreTrouve($joueur, $coffre): void
 {
-    if($joueur->posX == $coffre->posX && $joueur->posY == $coffre->posY) {
+    if ($joueur->posX == $coffre->posX && $joueur->posY == $coffre->posY) {
         gagner();
     }
 }
@@ -110,12 +115,13 @@ function coffreTrouve($joueur, $coffre):void
 
 
 /*
-* Si le joueur est sur l'emplacement du coffre,
-*   La pertie s'arrête et le joueur gagne.
-*/
-function gagner() {
+ * Si le joueur est sur l'emplacement du coffre,
+ *   La pertie s'arrête et le joueur gagne.
+ */
+function gagner()
+{
     session_destroy();
-    die("<h1>VOUS AVEZ GAGNER !!</h1>");
+    die("<div class='text-center'><h1>VOUS AVEZ <span class='text-success'>GAGNE</span>, BRAVO !</h1><br><a href='index.php' class='btn btn-success'>Accueil</a></div>");
 }
 
 
@@ -133,75 +139,73 @@ function mouvement($joueur, $coffre)
     }
 
     if ($joueur->posX === 0) {
-        echo "<br>Le joueur est au bout à gauche de la carte.";
+        $_SESSION['jeu'][] = "<p class='jeu fw-bold'>Le joueur est à gauche de la carte.</p>";
     } elseif ($joueur->posX === 9) {
-        echo "<br>Le joueur est au bout à droite de la carte.";
+        $_SESSION['jeu'][] = "<p class='jeu fw-bold'>Le joueur est à droite de la carte.</p>";
     }
 
     if ($joueur->posY === 0) {
-        echo "<br>Le joueur est au bout en bas de la carte.";
+        $_SESSION['jeu'][] = "<p class='jeu fw-bold'>Le joueur est en bas de la carte.</p>";
     } elseif ($joueur->posY === 9) {
-        echo "<br>Le joueur est au bout en haut de la carte.";
+        $_SESSION['jeu'][] = "<p class='jeu fw-bold'>Le joueur est en haut de la carte.</p>";
     }
     coffreTrouve($joueur, $coffre);
 
-    echo "<br>Position du joueur après déplacement - X: " . $joueur->posX . ", Y: " . $joueur->posY;
+    $_SESSION['jeu'][] = '<p class="jeu"><span style="color: black; font-weight: bold; text-decoration: underline;">' . date('h:i:s') . '</span> | Coordonées du joueur : X => ' . $joueur->posX . ' Y => ' . $joueur->posY . '</p>';
 }
 
 
 
 /*
-* Fonction de combat
-*
-* @var class $joueur
-* @var class $monstre
-*
-* Tant que les pvJoueur > 0 ou pvMonstre > 0
-*   le joueur afflige $atq de dommage au monstre
-*   echo du nombre de dommage + pvMonstre restant
-*   si pvMonstre > 0
-*       le monstre afflige $atq de dommage au joueur
-*       echo du nombre de dommage + pvJoueur restant
-* Si pvMonstre <= 0
-*   expJoueur += $atqMonstre
-*   echo nombre d'exp gagner
-*   echo nombre d'exp total
-* Si pvJoueur <= 0
-*   Fin de la partie
-*/
+ * Fonction de combat
+ *
+ * @var class $joueur
+ * @var class $monstre
+ *
+ * Tant que les pvJoueur > 0 ou pvMonstre > 0
+ *   le joueur afflige $atq de dommage au monstre
+ *   echo du nombre de dommage + pvMonstre restant
+ *   si pvMonstre > 0
+ *       le monstre afflige $atq de dommage au joueur
+ *       echo du nombre de dommage + pvJoueur restant
+ * Si pvMonstre <= 0
+ *   expJoueur += $atqMonstre
+ *   echo nombre d'exp gagner
+ *   echo nombre d'exp total
+ * Si pvJoueur <= 0
+ *   Fin de la partie
+ */
 function combat($joueur, $monstre)
 {
-    echo "<p class='jeu'>Le combat commence</p>";
+    $_SESSION['jeu'][] = "<p class='jeu'>Le combat commence</p>";
     $pv = $joueur->pv;
 
-    while ($joueur->pv > 0 && $monstre->pv >0) {
+    while ($joueur->pv > 0 && $monstre->pv > 0) {
         $joueur->attaque($monstre);
-        echo "<p class='joueur'>Le joueur inflige <span class='degat'>$joueur->atq dégats</span> au monstre</p>";
+        $_SESSION['jeu'][] = "<p class='joueur'>Le joueur inflige <span class='degat'>$joueur->atq dégats</span> au monstre</p>";
 
         if ($monstre->pv > 0) {
-            echo "<p class='monstre'>Il reste <span class='pv'>$monstre->pv pv</span> au monstre</p>";
+            $_SESSION['jeu'][] = "<p class='monstre'>Il reste <span class='pv'>$monstre->pv pv</span> au monstre</p>";
             $monstre->attaque($joueur);
-            echo "<p class='monstre'>Le monstre inflige <pans class='degat'>$monstre->atq dégats</span> au joueur";
-            echo "<p class='joueur'>Il reste <span class='pv'>$joueur->pv pv au joueur";
+            $_SESSION['jeu'][] = "<p class='monstre'>Le monstre inflige <pans class='degat'>$monstre->atq dégats</span> au joueur";
+            $_SESSION['jeu'][] = "<p class='joueur'>Il reste <span class='pv'>$joueur->pv pv</span> au joueur";
         }
     }
 
     if ($joueur->pv <= 0) {
-        echo "<p>Le joueur est mort";
-        echo "<h1>VOUS AVEZ PERDU</h1>";
+        $_SESSION['jeu'][] = "<p class='joueur'>Le joueur est mort</p>";
+        // $_SESSION['jeu'][] = ;
         session_destroy();
-        return "mort";
-    }
-    elseif ($monstre->pv <= 0) {
-        echo "<p>Le monstre est mort";
-        echo "<p>Le joueur fini le combat avec $joueur->pv pv";
+        die("<div class='text-center'><h1>VOUS AVEZ <span class='text-danger'>PERDU</span> ...</h1><br><a href='index.php' class='btn btn-success'>Accueil</a></div>");
+        // return "mort";
+    } elseif ($monstre->pv <= 0) {
+        $_SESSION['jeu'][] = "<p class='monstre'>Le monstre est mort";
+        $_SESSION['jeu'][] = "<p class='joueur'>Le joueur fini le combat avec <span class='pv'>$joueur->pv pv</span>";
         $joueur->pv = $pv;
-        echo "<p>Le joueur regagne ses pv, il lui reste $joueur->pv pv";
+        $_SESSION['jeu'][] = "<p class='joueur'>Le joueur regagne ses pv, il lui reste <span class='pv'>$joueur->pv pv</span>";
         $joueur->exp += $monstre->atq;
-        echo "<p>Le joueur gagne $monstre->atq EXP<br> $joueur->exp EXP total</p><br>";
+        $_SESSION['jeu'][] = "<p class='joueur'>Le joueur gagne $monstre->atq EXP<br> $joueur->exp EXP total</p><br>";
         unset($monster);
         return "survive";
     }
 }
-
-

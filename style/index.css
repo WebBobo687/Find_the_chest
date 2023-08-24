@@ -1,11 +1,35 @@
 .jeu {
-    color: blueviolet;
+  color: rgb(153, 0, 255);
 }
 
 .joueur {
-    color: blue;
+  color: blue;
 }
 
 .monstre {
-    color: red;
+  color: orange;
+}
+
+.pv {
+  color: green;
+}
+
+.degat {
+  color: red;
+}
+
+#text-zone {
+  height: 300px;
+}
+
+#text-block {
+  max-height: 300px;
+  overflow-y: scroll;
+}
+
+#btn-top,
+#btn-left,
+#btn-right,
+#btn-bottom {
+  font-size: 50px;
 }

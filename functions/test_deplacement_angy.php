@@ -40,15 +40,15 @@ if ($launched != false) {
         }
 
         if ($joueur->posX === 0) {
-            $_SESSION['jeu'][] = "<p class='fw-bold text-danger'>Le joueur est à gauche de la carte.</p>";
+            $_SESSION['jeu'][] = "<p class='jeu fw-bold'>Le joueur est à gauche de la carte.</p>";
         } elseif ($joueur->posX === 9) {
-            $_SESSION['jeu'][] = "<p class='fw-bold text-danger'>Le joueur est à droite de la carte.</p>";
+            $_SESSION['jeu'][] = "<p class='jeu fw-bold'>Le joueur est à droite de la carte.</p>";
         }
 
         if ($joueur->posY === 0) {
-            $_SESSION['jeu'][] = "<p class='fw-bold text-danger'>Le joueur est en bas de la carte.</p>";
+            $_SESSION['jeu'][] = "<p class='jeu fw-bold'>Le joueur est en bas de la carte.</p>";
         } elseif ($joueur->posY === 9) {
-            $_SESSION['jeu'][] = "<p class='fw-bold text-danger'>Le joueur est en haut de la carte.</p>";
+            $_SESSION['jeu'][] = "<p class='jeu fw-bold'>Le joueur est en haut de la carte.</p>";
         }
 
         $_SESSION['jeu'][] = '<p class="jeu"><span style="color: black; font-weight: bold; text-decoration: underline;">' . date('h:i:s') . '</span> | Coordonées du joueur : X => ' . $joueur->posX . ' Y => ' . $joueur->posY . '</p>';
