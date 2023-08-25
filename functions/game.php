@@ -85,7 +85,7 @@ function createCoffre(): object
 function createMonstres(): array
 {
     $_SESSION['monstres'] = [];
-    $_SESSION['nombreMonstres'] = rand(3, 8);
+    $_SESSION['nombreMonstres'] = rand(10, 50);
 
     for ($i = 0; $i <= $_SESSION['nombreMonstres']; $i++) {
         $_SESSION['monstres'][] = createUniqueMonstre();
@@ -187,7 +187,7 @@ function combat($joueur, $monstre)
         if ($monstre->pv > 0) {
             $_SESSION['jeu'][] = "<p class='monstre'>Il reste <span class='pv'>$monstre->pv pv</span> au monstre</p>";
             $monstre->attaque($joueur);
-            $_SESSION['jeu'][] = "<p class='monstre'>Le monstre inflige <pans class='degat'>$monstre->atq dégats</span> au joueur";
+            $_SESSION['jeu'][] = "<p class='monstre'>Le monstre inflige <span class='degat'>$monstre->atq dégats</span> au joueur";
             $_SESSION['jeu'][] = "<p class='joueur'>Il reste <span class='pv'>$joueur->pv pv</span> au joueur";
         }
     }

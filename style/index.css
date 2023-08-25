@@ -7,15 +7,15 @@
 }
 
 .monstre {
-  color: orange;
+  color: orangered;
 }
 
 .pv {
-  color: green;
+  color: rgb(1, 160, 1);
 }
 
 .degat {
-  color: red;
+  color: rgb(185, 1, 1);
 }
 
 #text-zone {
