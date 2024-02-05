@@ -4,18 +4,19 @@ spl_autoload_register(function ($className) {
     $classPath = str_replace('\\', '/', $className) . '.php';
     $classPath = '../' . $classPath;
 
-    require_once(__DIR__ . '/' . $classPath);
+    require_once __DIR__ . '/' . $classPath;
 });
 
 
 use Classes\Joueur;
 use Classes\Monstre;
 use Classes\Coffre;
-use Classes\Carte;
+
 
 if (session_status() != 2) {
     session_start();
 }
+
 
 if (!isset($_POST['endgame'])) {
     main();
@@ -23,6 +24,7 @@ if (!isset($_POST['endgame'])) {
     session_destroy();
     $_SESSION['jeu'] = [];
 }
+
 
 function main()
 {
@@ -98,7 +100,7 @@ function createMonstres(): array
 function createUniqueMonstre(): object
 {
     do {
-        $monstre = new Monstre(rand(125, 250), rand(100, 125), rand(0, 9), rand(0, 9));
+        $monstre = new Monstre(rand(125, 250), rand(100, 125), rand(0, 9), rand(0, 9), rand(1, 20));
     } while ($monstre->posX == 0 && $monstre->posY == 0);
     return $monstre;
 }
